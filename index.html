@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EVJF Ana 🥂 — 24 Avril 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A86C;--gold2:#E8D5A3;--dark:#111;--bg:#FAFAF8;--card:#FFFFFF;--border:#E8E0D0}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:#111;font-weight:500;min-height:100vh;overflow-x:hidden}
+
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+header{position:relative;z-index:1;text-align:center;padding:48px 20px 36px;background:linear-gradient(180deg,#FAFAF8 0%,#F5F0E8 100%);border-bottom:1px solid #E8E0D0}
+
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+header h1{font-family:'Great Vibes',cursive;font-size:clamp(56px,12vw,100px);color:var(--gold);line-height:1;margin-bottom:4px}
+header .sub{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:6px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:10px}
+header .lieux{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#111;font-weight:500;margin-bottom:6px}
+header .date{font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+header .message{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:#222;line-height:1.7;max-width:500px;margin:0 auto 0;padding:16px 20px;border-top:1px solid #2A2A2A;border-bottom:1px solid #E8E0D0}
+header .orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px 0}
+header .orn div{height:1px;flex:1;max-width:60px;background:linear-gradient(90deg,transparent,var(--gold))}
+header .orn div:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
+
+nav{position:relative;z-index:1;display:flex;justify-content:center;gap:8px;padding:16px;background:#FAFAF8;border-bottom:1px solid #E8E0D0;flex-wrap:wrap}
+.btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;font-weight:600}
+.btn:hover,.btn.active{background:var(--gold);color:#111;font-weight:600}
+.btn-fill{background:var(--gold);color:#111;border:1px solid var(--gold);padding:10px 20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:600;transition:all .2s}
+.btn-fill:hover{background:var(--gold2)}
+
+.filters{position:relative;z-index:1;display:flex;justify-content:center;gap:8px;padding:14px 16px;flex-wrap:wrap;background:#FAFAF8}
+.filter-btn{background:transparent;border:1px solid #DDD;padding:6px 14px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;color:#111;transition:all .2s;text-transform:uppercase}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold)}
+
+.counter{position:relative;z-index:1;text-align:center;padding:12px;font-size:11px;letter-spacing:2px;color:#333;text-transform:uppercase}
+
+/* MOSAIC */
+.mosaic{columns:3 200px;gap:10px;padding:0 12px 60px;max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.mosaic-item{break-inside:avoid;margin-bottom:10px;cursor:pointer;position:relative;overflow:hidden;border:1px solid #E8E0D0}
+.mosaic-item img{width:100%;display:block;transition:transform .4s ease;filter:brightness(.95)}
+.mosaic-item:hover img{transform:scale(1.05);filter:brightness(1)}
+.mosaic-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.85));padding:16px 12px 10px;opacity:0;transition:opacity .3s}
+.mosaic-item:hover .mosaic-overlay{opacity:1}
+.m-tag{display:inline-block;background:var(--gold);color:#111;font-size:8px;letter-spacing:2px;padding:2px 7px;text-transform:uppercase;font-weight:600;margin-bottom:5px}
+.m-name{color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:1px;margin-bottom:3px;font-weight:500}
+.m-msg{color:rgba(255,255,255,.7);font-family:'Playfair Display',serif;font-size:12px;font-style:italic}
+.like-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);border:1px solid var(--gold);border-radius:20px;padding:4px 10px;cursor:pointer;font-size:12px;color:var(--gold);z-index:2;transition:all .2s}
+.like-btn:hover{background:var(--gold);color:#111}
+.defi-badge{position:absolute;top:8px;left:8px;background:var(--gold);color:#111;font-size:8px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;font-weight:700;z-index:2}
+
+/* VOTE */
+.vote-bar-wrap{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1)}
+.vote-bar{height:100%;background:var(--gold);transition:width .5s}
+
+/* UPLOAD */
+.page{max-width:540px;margin:0 auto;padding:36px 20px 80px;position:relative;z-index:1}
+.page-head{text-align:center;margin-bottom:28px}
+.page-head .sup{font-size:9px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.page-head h2{font-family:'Great Vibes',cursive;font-size:48px;color:var(--gold);font-weight:400}
+.drop-zone{border:1px dashed #C9A86C;padding:40px 24px;text-align:center;cursor:pointer;background:#F5F0E8;margin-bottom:20px;transition:all .2s}
+.drop-zone:hover{border-color:var(--gold);background:#FFFFFF}
+.preview-wrap{position:relative;margin-bottom:20px}
+.preview-wrap img{width:100%;max-height:280px;object-fit:cover;display:block}
+.rm-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px}
+.fields{display:flex;flex-direction:column;gap:14px}
+.field label{display:block;font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:6px;text-transform:uppercase;font-weight:700}
+.field input,.field textarea{width:100%;padding:11px 14px;border:1px solid #E8E0D0;background:#F5F0E8;color:#111;font-family:'Montserrat',sans-serif;font-size:14px;outline:none;transition:border .2s;font-weight:500}
+.field input:focus,.field textarea:focus{border-color:var(--gold)}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.opt{border:1px solid #E8E0D0;padding:11px;text-align:center;cursor:pointer;font-size:12px;letter-spacing:1px;color:#111;transition:all .2s;text-transform:uppercase}
+.opt:hover,.opt.sel{border-color:var(--gold);color:var(--gold);background:#FFFFFF}
+.defi-opts{display:flex;flex-direction:column;gap:6px}
+.defi-opt{border:1px solid #E8E0D0;padding:10px 14px;cursor:pointer;font-size:12px;color:#111;transition:all .2s;display:flex;align-items:center;gap:10px}
+.defi-opt:hover,.defi-opt.sel{border-color:var(--gold);color:var(--gold);background:#FFFFFF}
+.defi-opt .check{width:16px;height:16px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.err{color:#e74c3c;font-size:12px;letter-spacing:1px}
+
+/* SLIDESHOW */
+.slideshow{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.slideshow img{max-width:90vw;max-height:76vh;object-fit:contain}
+.slide-info{text-align:center;margin-top:14px;color:#fff}
+.slide-name{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;color:var(--gold)}
+.slide-msg{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#111}
+.slide-close{position:absolute;top:20px;right:24px;background:none;border:1px solid #444;color:#fff;font-size:20px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.slide-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);border:none;color:#fff;font-size:32px;cursor:pointer;padding:14px 18px;transition:background .2s}
+.slide-nav:hover{background:rgba(255,255,255,.2)}
+.slide-prev{left:12px}.slide-next{right:12px}
+.slide-dots{position:absolute;bottom:20px;display:flex;gap:6px}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}
+.dot.active{background:var(--gold)}
+
+/* EMPTY */
+.empty{text-align:center;padding:80px 20px;position:relative;z-index:1}
+.empty p{font-family:'Playfair Display',serif;font-style:italic;color:#333;line-height:2;margin-bottom:28px;font-size:17px}
+
+/* QR */
+.qr-box{background:#F5F0E8;border:1px solid #E8E0D0;padding:36px 24px;margin-top:24px;text-align:center}
+
+/* Lightbox */
+.lightbox{max-width:700px;margin:0 auto;padding:32px 20px 60px;position:relative;z-index:1}
+
+@media(max-width:540px){.mosaic{columns:2 140px}}
+
+.crown-wrap{margin-bottom:20px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.deco-line{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px}
+.deco-segment{height:1px;background:#111;width:30px}
+.deco-segment.long{width:60px}
+.deco-diamond{width:6px;height:6px;background:#111;transform:rotate(45deg)}
+.deco-diamond.gold{background:var(--gold)}
+
+.message-frame{position:relative;display:inline-block;padding:20px 32px;margin-top:16px;border:1px solid #111;max-width:520px}
+.frame-corner{position:absolute;width:12px;height:12px;border-color:#C9A86C;border-style:solid}
+.frame-corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.frame-corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0}
+.frame-corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+.frame-corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+/* Remove old pulse animation */
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1)}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<header>
+  <!-- Couronne SVG premium -->
+  <div class="crown-wrap">
+    <svg width="72" height="52" viewBox="0 0 72 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Base band -->
+      <rect x="6" y="34" width="60" height="12" rx="1" fill="#111"/>
+      <rect x="6" y="44" width="60" height="4" rx="1" fill="#111"/>
+      <!-- Crown points -->
+      <polygon points="6,34 6,8 18,22 36,4 54,22 66,8 66,34" fill="#111"/>
+      <!-- Jewels -->
+      <circle cx="36" cy="12" r="3.5" fill="#C9A86C"/>
+      <circle cx="10" cy="28" r="2.5" fill="#C9A86C"/>
+      <circle cx="62" cy="28" r="2.5" fill="#C9A86C"/>
+      <circle cx="24" cy="22" r="2" fill="#E8D5A3"/>
+      <circle cx="48" cy="22" r="2" fill="#E8D5A3"/>
+      <!-- Base dots -->
+      <circle cx="16" cy="41" r="2" fill="#C9A86C"/>
+      <circle cx="28" cy="41" r="2" fill="#C9A86C"/>
+      <circle cx="36" cy="41" r="2" fill="#C9A86C"/>
+      <circle cx="44" cy="41" r="2" fill="#C9A86C"/>
+      <circle cx="56" cy="41" r="2" fill="#C9A86C"/>
+    </svg>
+  </div>
+
+  <!-- Ligne décorative haut -->
+  <div class="deco-line">
+    <div class="deco-segment"></div>
+    <div class="deco-diamond"></div>
+    <div class="deco-segment long"></div>
+    <div class="deco-diamond"></div>
+    <div class="deco-segment"></div>
+  </div>
+
+  <p class="sub">✦ &nbsp; E . V . V . F &nbsp; ✦</p>
+  <h1>Ana</h1>
+
+  <!-- Ligne décorative sous le nom -->
+  <div class="deco-line" style="margin-bottom:14px">
+    <div class="deco-segment long"></div>
+    <div class="deco-diamond gold"></div>
+    <div class="deco-segment long"></div>
+  </div>
+
+  <p class="lieux">The Voice à Payerne &nbsp;·&nbsp; Drinks &amp; Repas à Morat</p>
+  <p class="date">24 Avril 2026</p>
+
+  <!-- Encadré message premium -->
+  <div class="message-frame">
+    <div class="frame-corner tl"></div>
+    <div class="frame-corner tr"></div>
+    <div class="frame-corner bl"></div>
+    <div class="frame-corner br"></div>
+    <p class="message">Mes meilleures complices, ma plus belle soirée —<br/>capturez chaque moment de folie ! 💛</p>
+  </div>
+</header>
+
+<nav>
+  <button class="btn-fill" onclick="showView('gallery')">Galerie</button>
+  <button class="btn" onclick="startSlideshow()">▶ Diaporama</button>
+  <button class="btn-fill" onclick="showView('upload')">📸 Ajouter</button>
+  <button class="btn" onclick="showView('votes')">🏆 Votes</button>
+  <button class="btn" onclick="showView('qr')">QR Code</button>
+</nav>
+
+<div id="app"></div>
+
+<div class="slideshow" id="slideshow" style="display:none">
+  <button class="slide-close" onclick="stopSlideshow()">✕</button>
+  <button class="slide-nav slide-prev" onclick="slidePrev()">‹</button>
+  <img id="slide-img" src="" alt=""/>
+  <div class="slide-info">
+    <p class="slide-name" id="slide-name"></p>
+    <p class="slide-msg" id="slide-msg"></p>
+  </div>
+  <button class="slide-nav slide-next" onclick="slideNext()">›</button>
+  <div class="slide-dots" id="slide-dots"></div>
+</div>
+
+<script>
+const SB_URL='https://djvkrvwrczcdknskwito.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqdmtydndyY3pjZGtuc2t3aXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNzIxNzcsImV4cCI6MjA5MTc0ODE3N30.DCfISAr0FT5MqXuFjC1A1m3PbhI4LzxTLJDWGm4VwPU';
+const db=window.supabase.createClient(SB_URL,SB_KEY);
+
+const MOMENTS=['The Voice','Drinks','Repas','Soirée'];
+const DEFIS=['Chanter seule sur scène 🎤','Shot cul-sec 🥃','Photo avec un inconnu 📸','Danser sur une table 💃','Selfie avec le staff ⭐','Karaoké surprise 🎶'];
+const QR='iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAADk0lEQVR4nO2cTY7bMAyFHysBWcpADjBHkW9WzJF6A/soOUABe1lAxutCov8mmxaTNhk8LhJY0QdHAEE90rSM+Dsbv/0lCIgUKVKkSJEiRT4fac0irJ8jMFoERjPD2C1WLzH7rP4//1uRz0XG+pUHAJivIObFmLkYMgEDIqzNDQUA/PK11iny8eTc4ovZWwGAQACLcUAgyV/+q8XPu6fIr0mSt9hcZbQIZBZgtMvHEsAz/FuRz0han0iSBRwS2QJPKuDwsHuKfG3St6ZEADNAYIlAmgBgicR8hQGxWP4B7KPRa61T5MPJ0czMOsD6+ULkW4R9v11oPQDkCQCw1LTss+4p8ouQ4NHqWFPSpU0ZUgHyceLwWusU+Thy70MDAjkkEkhkFUCZBeQUiLx9yIdE7q35T/UNl855wk5Ec0CoflWdS3FI5MHqDpbpVaFM0hOxcIhI7maKQyIP5nnZ3AFIEzgawLH38TwsEXm6Fs/agudmr7VOkY8jq6+wpu1zLJbdRwxp8mQ+/TLkH4sptxd5x1wPoennIZU2Nvg21pRRKiAnJ7SXiXRzjbxWohPZkvmaiAFeti4AkvSQyLO1qlCNPu4qtai4jrXoU9bCkXxI5M62OOSXW8xpEcmz/C0syYdE7mzTPm2PAryoWMvWnojlVSPJh0Qe7ByHht0OFrgfU51a5H1rNcbJdc6+5Ah4NhY8Q1McEvnBNk19UNJbrhb8QRrQpigOiTxYiypoQaaNujxqUyZgl9YrDok8mPtQqPrZJbbnZVUZHdJ6xSGRR2teM/mT+SqFUhurYvtUaJQPibxDjm+ltuPzvQNqH2NfGxcv5HsXaHZqzH/JdYp8AOmaGoD3eawRaQoeoBDOqZvikMjVdsn8mpd5tTHsm85agq/6kMiz7epDWxvsOrZ1nrVS9qTnZSLPtsWhrTC9E9Ftp9t+UBwSeTYerbnP1Hxo8yZvkpUeEnmX3M794PtbgfUIBOZLLWCbdYHAHAHMEdb/538r8rnIdS/zIlET1lvMaf1DW7O+9jKRd0k/94PvXSA5LUbe1rNAOrTjiPLtop58kUeLH0bSTyPmDpYHAmM3EZivpX6MXfA+/ddap8h/Sob6lj2HOQLAYtanUkvZVR71n39PkS9Mns/9QL4ZOHZt2JAAYr4WqwegpU+4p8ivRR6edezet/f3XNeC0Nb2IU0t8mCH1w7/xHTGuUiRIkWKFCnyi5C/AZVQlQB0OfI1AAAAAElFTkSuQmCC';
+
+let photos=[],view='gallery',filter='Tous',slideIdx=0,slideTimer=null,selectedPhoto=null;
+let form={name:'',message:'',imageData:null,preview:null,moment:'',defis:[]};
+
+// Canvas animation — confetti dorés + étincelles
+(function(){
+  const canvas=document.getElementById('bg');
+  const ctx=canvas.getContext('2d');
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const GOLD=['#C9A86C','#D4AF6A','#E8D5A3','#B8923E','#F0E0B0','#fff'];
+  const particles=[];
+  for(let i=0;i<55;i++){
+    const isSquare=Math.random()>.6;
+    particles.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      size:isSquare?2+Math.random()*4:0.8+Math.random()*2,
+      color:GOLD[Math.floor(Math.random()*GOLD.length)],
+      vy:-(0.15+Math.random()*.5),
+      vx:(Math.random()-.5)*.4,
+      alpha:Math.random()*.8,
+      alphaDir:Math.random()>.5?.004:-.004,
+      phase:Math.random()*Math.PI*2,
+      isSquare,
+      rot:Math.random()*Math.PI,
+      rotV:(Math.random()-.5)*.02
+    });
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const now=Date.now()/1000;
+    for(const p of particles){
+      p.alpha+=p.alphaDir;
+      if(p.alpha>=.8||p.alpha<=.05)p.alphaDir*=-1;
+      p.x+=p.vx+Math.sin(now*.5+p.phase)*.4;
+      p.y+=p.vy;
+      if(p.y<-10){p.y=canvas.height+10;p.x=Math.random()*canvas.width;}
+      ctx.save();
+      ctx.globalAlpha=p.alpha*.6;
+      ctx.translate(p.x,p.y);
+      if(p.isSquare){
+        p.rot+=p.rotV;
+        ctx.rotate(p.rot);
+        ctx.fillStyle=p.color;
+        ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0,0,p.size,0,Math.PI*2);
+        ctx.fillStyle=p.color;
+        ctx.fill();
+        // halo
+        const g=ctx.createRadialGradient(0,0,0,0,0,p.size*3);
+        g.addColorStop(0,'rgba(201,168,108,0.2)');
+        g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;
+        ctx.beginPath();
+        ctx.arc(0,0,p.size*3,0,Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+function compress(file){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const c=document.createElement('canvas'),max=900;
+        let w=img.width,h=img.height;
+        if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+        c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',.72));
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+async function loadPhotos(){
+  document.getElementById('app').innerHTML='<div class="empty"><p>Chargement des souvenirs…</p></div>';
+  const{data,error}=await db.from('evjf_photos').select('*').order('created_at',{ascending:false});
+  if(!error)photos=data||[];
+  render();
+}
+
+function showView(v){view=v;render();if(v==='gallery')loadPhotos();}
+function fp(){return filter==='Tous'?photos:photos.filter(p=>p.moment===filter);}
+function setFilter(f){filter=f;render();}
+function openPhoto(i){selectedPhoto=photos[i];view='lightbox';render();}
+
+async function likePhoto(e,id){
+  e.stopPropagation();
+  const p=photos.find(x=>x.id===id);if(!p)return;
+  p.likes=(p.likes||0)+1;
+  await db.from('evjf_photos').update({likes:p.likes}).eq('id',id);
+  render();
+}
+
+async function handleFile(e){
+  const f=e.target.files[0];if(!f)return;
+  const d=await compress(f);form.imageData=d;form.preview=d;render();
+}
+function removePreview(){form.imageData=null;form.preview=null;render();}
+function selectMoment(m){form.moment=m;render();}
+function toggleDefi(d){
+  if(form.defis.includes(d))form.defis=form.defis.filter(x=>x!==d);
+  else form.defis.push(d);
+  render();
+}
+
+async function handleSubmit(){
+  const name=document.getElementById('f-name').value.trim();
+  const message=document.getElementById('f-message').value.trim();
+  if(!form.imageData||!name)return;
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='Envoi en cours…';
+  const{error}=await db.from('evjf_photos').insert({
+    name,message,image_data:form.imageData,
+    moment:form.moment,defis:form.defis.join(', '),likes:0
+  });
+  if(error){
+    document.getElementById('f-err').textContent='Erreur. Photo trop grande ?';
+    btn.disabled=false;btn.textContent='Partager ce moment 🥂';
+  }else{
+    form={name:'',message:'',imageData:null,preview:null,moment:'',defis:[]};
+    showView('gallery');
+  }
+}
+
+function startSlideshow(){
+  const f=fp();if(!f.length)return;
+  slideIdx=0;
+  document.getElementById('slideshow').style.display='flex';
+  updateSlide();
+  slideTimer=setInterval(()=>{slideIdx=(slideIdx+1)%f.length;updateSlide();},3500);
+}
+function stopSlideshow(){clearInterval(slideTimer);document.getElementById('slideshow').style.display='none';}
+function updateSlide(){
+  const f=fp(),p=f[slideIdx];
+  document.getElementById('slide-img').src=p.image_data;
+  document.getElementById('slide-name').textContent=p.name;
+  document.getElementById('slide-msg').textContent=p.message?'"'+p.message+'"':'';
+  document.getElementById('slide-dots').innerHTML=f.map((_,i)=>`<div class="dot${i===slideIdx?' active':''}" onclick="goSlide(${i})"></div>`).join('');
+}
+function slidePrev(){const f=fp();slideIdx=(slideIdx-1+f.length)%f.length;updateSlide();}
+function slideNext(){const f=fp();slideIdx=(slideIdx+1)%f.length;updateSlide();}
+function goSlide(i){slideIdx=i;updateSlide();}
+
+function downloadQR(){
+  const a=document.createElement('a');
+  a.download='qr-evjf-ana.png';
+  a.href='data:image/png;base64,'+QR;
+  a.click();
+}
+
+function render(){
+  const app=document.getElementById('app');
+
+  if(view==='gallery'){
+    const f=fp();
+    app.innerHTML=`
+      <div class="filters">
+        ${['Tous',...MOMENTS].map(m=>`<button class="filter-btn${filter===m?' active':''}" onclick="setFilter('${m}')">${m}</button>`).join('')}
+      </div>
+      <div class="counter">${photos.length} souvenir${photos.length!==1?'s':''} · ${f.length} affiché${f.length!==1?'s':''}</div>
+      ${f.length===0?`<div class="empty"><p>Aucune photo encore…<br/>Soyez les premières à immortaliser la soirée ! 🥂</p><button class="btn-fill" onclick="showView('upload')">📸 Ajouter</button></div>`:`
+      <div class="mosaic">${f.map(p=>`
+        <div class="mosaic-item" onclick="openPhoto(${photos.indexOf(p)})">
+          <img src="${p.image_data}" alt=""/>
+          <button class="like-btn" onclick="likePhoto(event,'${p.id}')">♥ ${p.likes||0}</button>
+          ${p.defis?`<div class="defi-badge">Défi ✓</div>`:''}
+          <div class="mosaic-overlay">
+            ${p.moment?`<span class="m-tag">${p.moment}</span><br/>`:''}
+            <p class="m-name">${p.name}</p>
+            ${p.message?`<p class="m-msg">"${p.message}"</p>`:''}
+          </div>
+        </div>`).join('')}
+      </div>`}`;
+  }
+
+  if(view==='upload'){
+    app.innerHTML=`
+      <div class="page">
+        <button class="btn" onclick="showView('gallery')" style="margin-bottom:28px">← Retour</button>
+        <div class="page-head"><p class="sup">✦ votre souvenir ✦</p><h2>Partager</h2></div>
+        ${!form.preview?`
+          <div class="drop-zone" onclick="document.getElementById('fi').click()">
+            <div style="font-size:28px;margin-bottom:10px">📸</div>
+            <p style="font-size:14px;margin-bottom:4px;color:#111">Cliquez pour choisir une photo</p>
+            <small style="color:#333;font-size:11px;letter-spacing:1px">JPG, PNG</small>
+            <input id="fi" type="file" accept="image/*" style="display:none" onchange="handleFile(event)"/>
+          </div>`:`
+          <div class="preview-wrap">
+            <img src="${form.preview}" alt=""/>
+            <button class="rm-btn" onclick="removePreview()">✕</button>
+          </div>`}
+        <div class="fields">
+          <div class="field"><label>Votre prénom *</label><input id="f-name" placeholder="Ex : Sophie"/></div>
+          <div class="field"><label>Moment de la soirée</label>
+            <div class="grid2">${MOMENTS.map(m=>`<div class="opt${form.moment===m?' sel':''}" onclick="selectMoment('${m}')">${m}</div>`).join('')}</div>
+          </div>
+          <div class="field"><label>Défis accomplis 🎯</label>
+            <div class="defi-opts">${DEFIS.map(d=>`
+              <div class="defi-opt${form.defis.includes(d)?' sel':''}" onclick="toggleDefi('${d}')">
+                <div class="check">${form.defis.includes(d)?'✓':''}</div>
+                <span>${d}</span>
+              </div>`).join('')}
+            </div>
+          </div>
+          <div class="field"><label>Un mot / une dédicace</label><textarea id="f-message" rows="3" placeholder="Ce moment était… 😄"></textarea></div>
+          <p id="f-err" class="err"></p>
+          <button id="submit-btn" class="btn-fill" onclick="handleSubmit()" ${!form.imageData?'disabled':''} style="padding:14px;font-size:11px;letter-spacing:3px;margin-top:6px">Partager ce moment 🥂</button>
+        </div>
+      </div>`;
+  }
+
+  if(view==='votes'){
+    const sorted=[...photos].sort((a,b)=>(b.likes||0)-(a.likes||0));
+    const max=sorted.length?sorted[0].likes||1:1;
+    app.innerHTML=`
+      <div class="page" style="max-width:700px">
+        <div class="page-head"><p class="sup">✦ classement ✦</p><h2>Top Photos</h2></div>
+        ${sorted.length===0?`<p style="text-align:center;color:#333;font-style:italic;padding:40px">Aucun vote encore !</p>`:`
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${sorted.slice(0,10).map((p,i)=>`
+            <div style="display:flex;align-items:center;gap:14px;background:#F5F0E8;border:1px solid #E8E0D0;padding:12px;cursor:pointer" onclick="openPhoto(${photos.indexOf(p)})">
+              <div style="font-family:'Playfair Display',serif;font-size:22px;color:${i===0?'var(--gold)':i===1?'#aaa':i===2?'#cd7f32':'#555'};font-style:italic;min-width:28px">${i+1}</div>
+              <img src="${p.image_data}" style="width:60px;height:60px;object-fit:cover;border:1px solid #E8E0D0"/>
+              <div style="flex:1">
+                <p style="font-size:12px;letter-spacing:1px;color:#222;margin-bottom:4px">${p.name}</p>
+                ${p.moment?`<p style="font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase">${p.moment}</p>`:''}
+                <div style="margin-top:6px;height:3px;background:#E8E0D0;border-radius:2px">
+                  <div style="height:100%;background:var(--gold);border-radius:2px;width:${Math.round((p.likes||0)/max*100)}%"></div>
+                </div>
+              </div>
+              <div style="color:var(--gold);font-size:13px;font-weight:600;min-width:40px;text-align:right">♥ ${p.likes||0}</div>
+            </div>`).join('')}
+        </div>`}
+      </div>`;
+  }
+
+  if(view==='lightbox'&&selectedPhoto){
+    const p=selectedPhoto;
+    app.innerHTML=`
+      <div class="lightbox">
+        <button class="btn" onclick="showView('gallery')" style="margin-bottom:24px">← Retour</button>
+        <img src="${p.image_data}" style="width:100%;max-height:62vh;object-fit:contain;display:block;border:1px solid #E8E0D0"/>
+        <div style="text-align:center;margin-top:20px;padding:20px 0 0;border-top:1px solid #E8E0D0">
+          ${p.moment?`<p style="font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">${p.moment}</p>`:''}
+          <p style="font-family:'Montserrat',sans-serif;font-size:13px;letter-spacing:1px;margin-bottom:6px">${p.name}</p>
+          ${p.defis?`<p style="font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">Défis : ${p.defis}</p>`:''}
+          ${p.message?`<p style="font-family:'Playfair Display',serif;font-style:italic;color:#333;font-size:16px;line-height:1.8">"${p.message}"</p>`:''}
+          <button onclick="likePhoto(event,'${p.id}')" style="margin-top:16px;background:transparent;border:1px solid var(--gold);padding:9px 24px;font-family:'Montserrat',sans-serif;font-size:12px;cursor:pointer;color:var(--gold);letter-spacing:2px;transition:all .2s">♥ ${p.likes||0} vote${(p.likes||0)!==1?'s':''}</button>
+        </div>
+      </div>`;
+  }
+
+  if(view==='qr'){
+    app.innerHTML=`
+      <div class="page" style="text-align:center">
+        <button class="btn" onclick="showView('gallery')" style="margin-bottom:28px">← Retour</button>
+        <div class="page-head"><p class="sup">✦ partagez ✦</p><h2>QR Code</h2></div>
+        <div class="qr-box">
+          <img src="data:image/png;base64,${QR}" style="width:220px;height:220px;display:block;margin:0 auto 20px"/>
+          <p style="font-size:11px;letter-spacing:2px;color:#333;margin-bottom:16px;text-transform:uppercase">yanutu.github.io/evvf-ana-2026</p>
+          <p style="font-family:'Playfair Display',serif;font-style:italic;color:#111;font-size:14px;line-height:1.8;margin-bottom:22px">Scannez pour accéder à la galerie<br/>et partager vos photos de la soirée !</p>
+          <button class="btn-fill" onclick="downloadQR()" style="padding:12px 28px">Télécharger</button>
+        </div>
+      </div>`;
+  }
+}
+
+loadPhotos();
+</script>
+</body>
+</html>
